@@ -39,7 +39,7 @@ def getIdFolder():
     return usePath
 
 
-def choices(folder):
+def choices():
     print("===================================")
     print("Please select one of the following: ")
     print("1. Backup Save")
@@ -60,7 +60,7 @@ def choices(folder):
 
 def waitForBackupOrReplace():
     folder = getIdFolder()
-    choice = choices(folder)
+    choice = choices()
     if choice == 3:
         return waitForBackupOrReplace()
     else:
@@ -97,7 +97,7 @@ def backup(folder):
     )
     shutil.copyfile(folder + os.path.sep + SAVEFILE, saveFileBackup)
     shutil.copyfile(folder + os.path.sep + SAVEFILEBAK, saveFileBakBackup)
-
+    print("Succesfully backed up files")
     return 0
 
 
@@ -126,15 +126,20 @@ def replace(folder):
     )
     shutil.copyfile(backupSaveFile, folder + os.path.sep + SAVEFILE)
     shutil.copyfile(backupSaveFileBak, folder + os.path.sep + SAVEFILEBAK)
+    print("Succesfully replaced files")
     return 0
 
 
 def main():
     folder, choice = waitForBackupOrReplace()
-    if choice == 1:
-        backup(folder)
-    else:
-        replace(folder)
+    while True:
+        if choice == 1:
+            backup(folder)
+        elif choice == 2:
+            replace(folder)
+        elif choice == 3:
+            folder = getIdFolder()
+        choice = choices()
 
 
 if __name__ == "__main__":
