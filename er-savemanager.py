@@ -43,11 +43,21 @@ def choices(folder):
     print("2. Replace Save")
     print("3. Select a new steam id")
     print("4. Exit Program")
+    while True:
+        choice = input()
+        if not choice.isnumeric():
+            continue
+        id = int(id)
+        if id >= 1 and id <= 4:
+            break
+    if choice == 4:
+        quit()
+    return choice
 
 
 def main():
     folder = getIdFolder()
-    choices(folder)
+    choice = choices(folder)
 
     #! CODE
 
