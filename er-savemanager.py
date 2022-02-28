@@ -54,6 +54,22 @@ def getFiles(folder):
     return backupFiles, backupFolder
 
 
+def getFileChoice(backupFiles):
+    for i in range(int(len(backupFiles) / 2)):
+        print(str(i) + ": " + backupFiles[i])
+    print(str(int(len(backupFiles) / 2)) + ". Cancel")
+    while True:
+        choice = input("Please select backup to rename: ")
+        if not choice.isnumeric():
+            continue
+        choice = int(choice)
+        if choice == len(backupFiles) / 2:
+            return -1
+        if choice >= 0 and choice < len(backupFiles) / 2:
+            break
+    return choice
+
+
 def choices():
     print("===================================")
     print("Please select one of the following: ")
@@ -123,18 +139,9 @@ def replace(folder):
 
     backupFiles, backupFolder = getFiles(folder)
     # have list of backups available, SAVEFILE's come first, SAVEFILEBAK's come last
-    for i in range(int(len(backupFiles) / 2)):
-        print(str(i) + ": " + backupFiles[i])
-    print(str(int(len(backupFiles) / 2)) + ". Cancel")
-    while True:
-        choice = input("Please select backup to replace save file with: ")
-        if not choice.isnumeric():
-            continue
-        choice = int(choice)
-        if choice == len(backupFiles) / 2:
-            return
-        if choice >= 0 and choice < (len(backupFiles) / 2):
-            break
+    choice = getFileChoice(backupFiles)
+    if choice == -1:
+        return
 
     # have choice now
     backupSaveFile = backupFolder + os.path.sep + backupFiles[choice]
@@ -151,19 +158,9 @@ def rename(folder):
     print("===================================")
     backupFiles, backupFolder = getFiles(folder)
     # have list of backups available, SAVEFILE's come first, SAVEFILEBAK's come last
-    for i in range(int(len(backupFiles) / 2)):
-        print(str(i) + ": " + backupFiles[i])
-    print(str(int(len(backupFiles) / 2)) + ". Cancel")
-    while True:
-        choice = input("Please select backup to rename: ")
-        if not choice.isnumeric():
-            continue
-        choice = int(choice)
-        if choice == len(backupFiles) / 2:
-            return
-        if choice >= 0 and choice < len(backupFiles) / 2:
-            break
-
+    choice = getFileChoice(backupFiles)
+    if choice == -1:
+        return
     # have choice now
     renameSaveFile = backupFolder + os.path.sep + backupFiles[choice]
     renameSaveFileBak = (
@@ -198,6 +195,24 @@ def rename(folder):
 
 
 def delete(folder):
+    print("===================================")
+    backupFiles, backupFolder = getFiles(folder)
+    # have list of backups available, SAVEFILE's come first, SAVEFILEBAK's come last
+    choice = getFileChoice(backupFiles)
+    if choice == -1:
+        return
+    # have choice now
+    deleteSaveFile = backupFolder + os.path.sep + backupFiles[choice]
+    deleteSaveFileBak = (
+        backupFolder + os.path.sep + backupFiles[choice + int(len(backupFiles) / 2)]
+    )
+    try:
+        os.remove(deleteSaveFile)
+        os.remove(deleteSaveFileBak)
+    except:
+        print("Error deleting backups")
+        return
+    print("Successfully deleted backups")
     return 0
 
 
