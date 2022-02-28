@@ -23,6 +23,7 @@ def get_immediate_subdirectories(a_dir):
 def getIdFolder():
     folders = get_immediate_subdirectories(PATH)
     # have a list of steam id's, ask user for which one
+    print("===================================")
     for i in range(len(folders)):
         print(str(i) + ": " + folders[i])
     while True:
@@ -38,6 +39,7 @@ def getIdFolder():
 
 
 def choices(folder):
+    print("===================================")
     print("Please select one of the following: ")
     print("1. Backup Save")
     print("2. Replace Save")
@@ -47,19 +49,25 @@ def choices(folder):
         choice = input()
         if not choice.isnumeric():
             continue
-        id = int(id)
-        if id >= 1 and id <= 4:
+        choice = int(choice)
+        if choice >= 1 and choice <= 4:
             break
     if choice == 4:
         quit()
     return choice
 
 
-def main():
+def waitForBackupOrReplace():
     folder = getIdFolder()
     choice = choices(folder)
+    if choice == 3:
+        choice = waitForBackupOrReplace()
+    else:
+        return choice
 
-    #! CODE
+
+def main():
+    choice = waitForBackupOrReplace()
 
 
 if __name__ == "__main__":
