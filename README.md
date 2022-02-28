@@ -13,3 +13,5 @@ This assumes you're using a windows PC, where the Elden ring saves are stored in
 Backups will be stored where the program executable is downloaded
 
 To my knowledge, python does not need to be installed on a computer who downloads the exe file
+
+I take no responsibility for whatever happens if you use this program
