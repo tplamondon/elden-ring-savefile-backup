@@ -4,10 +4,11 @@ from os.path import isfile, join
 import argparse
 from posixpath import split
 import pathlib
-
+import shutil
+from datetime import datetime
 
 #! CONSTANTS
-PROGRAMDIRECTORY = pathlib.Path(__file__).parent.resolve()
+PROGRAMDIRECTORY = str(pathlib.Path(__file__).parent.resolve())
 PATH = os.getenv("APPDATA") + os.path.sep + "EldenRing"
 # this gives %appdata%/EldenRing
 SAVEFILE = "ER0000.sl2"
@@ -61,13 +62,55 @@ def waitForBackupOrReplace():
     folder = getIdFolder()
     choice = choices(folder)
     if choice == 3:
-        choice = waitForBackupOrReplace()
+        return waitForBackupOrReplace()
     else:
-        return choice
+        return folder, choice
+
+
+def extractIdFromPath(folder):
+    splitString = folder.split(os.path.sep)
+    return splitString[-1]
+
+
+def backup(folder):
+    now = datetime.now()
+    strTime = "." + now.strftime("%Y%m%d%H%M%S")
+    saveFileBackup = (
+        PROGRAMDIRECTORY
+        + os.path.sep
+        + extractIdFromPath(folder)
+        + os.path.sep
+        + SAVEFILE
+        + strTime
+    )
+    saveFileBakBackup = (
+        PROGRAMDIRECTORY
+        + os.path.sep
+        + extractIdFromPath(folder)
+        + os.path.sep
+        + SAVEFILEBAK
+        + strTime
+    )
+    # create backup folder if needed
+    pathlib.Path(PROGRAMDIRECTORY + os.path.sep + extractIdFromPath(folder)).mkdir(
+        exist_ok=True
+    )
+    shutil.copyfile(folder + os.path.sep + SAVEFILE, saveFileBackup)
+    shutil.copyfile(folder + os.path.sep + SAVEFILEBAK, saveFileBakBackup)
+
+    return 0
+
+
+def replace(folder):
+    return 0
 
 
 def main():
-    choice = waitForBackupOrReplace()
+    folder, choice = waitForBackupOrReplace()
+    if choice == 1:
+        backup(folder)
+    else:
+        replace(folder)
 
 
 if __name__ == "__main__":
