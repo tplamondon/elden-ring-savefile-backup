@@ -14,7 +14,9 @@ PATH = os.getenv("APPDATA") + os.path.sep + "EldenRing"
 SAVEFILE = "ER0000.sl2"
 SAVEFILEBAK = "ER0000.sl2.bak"
 
+# The following function was taken from here:
 # https://stackoverflow.com/questions/800197/how-to-get-all-of-the-immediate-subdirectories-in-python
+# I believe the following licence applies to this function https://creativecommons.org/licenses/by-sa/3.0/
 def get_immediate_subdirectories(a_dir):
     return [
         name for name in os.listdir(a_dir) if os.path.isdir(os.path.join(a_dir, name))
