@@ -73,12 +73,12 @@ def getFileChoice(backupFiles):
 def choices():
     print("===================================")
     print("Please select one of the following: ")
-    print("1. Backup Save")
-    print("2. Replace Save")
-    print("3. Rename backup")
-    print("4. Delete Backup")
+    print("1. Backup save")
+    print("2. Replace save with backup")
+    print("3. Rename sackup")
+    print("4. Delete sackup")
     print("5. Select a new steam id")
-    print("6. Exit Program")
+    print("6. Exit program")
     while True:
         choice = input()
         if not choice.isnumeric():
