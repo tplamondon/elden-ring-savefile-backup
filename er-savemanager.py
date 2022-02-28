@@ -45,21 +45,32 @@ def getIdFolder():
     return usePath
 
 
+def getFiles(folder):
+    pathlib.Path(PROGRAMDIRECTORY + os.path.sep + extractIdFromPath(folder)).mkdir(
+        exist_ok=True
+    )
+    backupFolder = PROGRAMDIRECTORY + os.path.sep + extractIdFromPath(folder)
+    backupFiles = [f for f in listdir(backupFolder) if isfile(join(backupFolder, f))]
+    return backupFiles, backupFolder
+
+
 def choices():
     print("===================================")
     print("Please select one of the following: ")
     print("1. Backup Save")
     print("2. Replace Save")
-    print("3. Select a new steam id")
-    print("4. Exit Program")
+    print("3. Rename backup")
+    print("4. Delete Backup")
+    print("5. Select a new steam id")
+    print("6. Exit Program")
     while True:
         choice = input()
         if not choice.isnumeric():
             continue
         choice = int(choice)
-        if choice >= 1 and choice <= 4:
+        if choice >= 1 and choice <= 6:
             break
-    if choice == 4:
+    if choice == 6:
         quit()
     return choice
 
@@ -109,20 +120,20 @@ def backup(folder):
 
 def replace(folder):
     print("===================================")
-    pathlib.Path(PROGRAMDIRECTORY + os.path.sep + extractIdFromPath(folder)).mkdir(
-        exist_ok=True
-    )
-    backupFolder = PROGRAMDIRECTORY + os.path.sep + extractIdFromPath(folder)
-    backupFiles = [f for f in listdir(backupFolder) if isfile(join(backupFolder, f))]
+
+    backupFiles, backupFolder = getFiles(folder)
     # have list of backups available, SAVEFILE's come first, SAVEFILEBAK's come last
     for i in range(int(len(backupFiles) / 2)):
         print(str(i) + ": " + backupFiles[i])
+    print(str(int(len(backupFiles) / 2)) + ". Cancel")
     while True:
         choice = input("Please select backup to replace save file with: ")
         if not choice.isnumeric():
             continue
         choice = int(choice)
-        if choice >= 0 and choice < len(backupFiles) / 2:
+        if choice == len(backupFiles) / 2:
+            return
+        if choice >= 0 and choice < (len(backupFiles) / 2):
             break
 
     # have choice now
@@ -136,6 +147,60 @@ def replace(folder):
     return 0
 
 
+def rename(folder):
+    print("===================================")
+    backupFiles, backupFolder = getFiles(folder)
+    # have list of backups available, SAVEFILE's come first, SAVEFILEBAK's come last
+    for i in range(int(len(backupFiles) / 2)):
+        print(str(i) + ": " + backupFiles[i])
+    print(str(int(len(backupFiles) / 2)) + ". Cancel")
+    while True:
+        choice = input("Please select backup to rename: ")
+        if not choice.isnumeric():
+            continue
+        choice = int(choice)
+        if choice == len(backupFiles) / 2:
+            return
+        if choice >= 0 and choice < len(backupFiles) / 2:
+            break
+
+    # have choice now
+    renameSaveFile = backupFolder + os.path.sep + backupFiles[choice]
+    renameSaveFileBak = (
+        backupFolder + os.path.sep + backupFiles[choice + int(len(backupFiles) / 2)]
+    )
+    tempRenameFile = renameSaveFile.split(".")
+    tempRenameBak = renameSaveFileBak.split(".")
+    if not tempRenameFile[-1].isnumeric():
+        renameSaveFileNew = (
+            tempRenameFile[0] + "." + tempRenameFile[1] + "." + tempRenameFile[2]
+        )
+        renameSaveFileBakNew = (
+            tempRenameBak[0]
+            + "."
+            + tempRenameBak[1]
+            + "."
+            + tempRenameBak[2]
+            + "."
+            + tempRenameBak[3]
+        )
+    else:
+        renameSaveFileNew = renameSaveFile
+        renameSaveFileBakNew = renameSaveFileBak
+    newName = "." + input("Please enter a name for the backup: ")
+    newNameSaveFile = renameSaveFileNew + newName
+    newNameSaveFileBak = renameSaveFileBakNew + newName
+
+    shutil.move(renameSaveFile, newNameSaveFile)
+    shutil.move(renameSaveFileBak, newNameSaveFileBak)
+    print("Succesfully renamed files")
+    return 0
+
+
+def delete(folder):
+    return 0
+
+
 def main():
     folder, choice = waitForBackupOrReplace()
     while True:
@@ -144,7 +209,12 @@ def main():
         elif choice == 2:
             replace(folder)
         elif choice == 3:
+            rename(folder)
+        elif choice == 4:
+            delete(folder)
+        elif choice == 5:
             folder = getIdFolder()
+
         choice = choices()
 
 
