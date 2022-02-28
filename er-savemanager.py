@@ -102,6 +102,30 @@ def backup(folder):
 
 
 def replace(folder):
+    print("===================================")
+    pathlib.Path(PROGRAMDIRECTORY + os.path.sep + extractIdFromPath(folder)).mkdir(
+        exist_ok=True
+    )
+    backupFolder = PROGRAMDIRECTORY + os.path.sep + extractIdFromPath(folder)
+    backupFiles = [f for f in listdir(backupFolder) if isfile(join(backupFolder, f))]
+    # have list of backups available, SAVEFILE's come first, SAVEFILEBAK's come last
+    for i in range(int(len(backupFiles) / 2)):
+        print(str(i) + ": " + backupFiles[i])
+    while True:
+        choice = input("Please select backup to replace save file with: ")
+        if not choice.isnumeric():
+            continue
+        choice = int(choice)
+        if choice >= 0 and choice < len(backupFiles) / 2:
+            break
+
+    # have choice now
+    backupSaveFile = backupFolder + os.path.sep + backupFiles[choice]
+    backupSaveFileBak = (
+        backupFolder + os.path.sep + backupFiles[choice + int(len(backupFiles) / 2)]
+    )
+    shutil.copyfile(backupSaveFile, folder + os.path.sep + SAVEFILE)
+    shutil.copyfile(backupSaveFileBak, folder + os.path.sep + SAVEFILEBAK)
     return 0
 
 
