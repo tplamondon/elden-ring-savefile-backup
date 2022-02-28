@@ -217,6 +217,11 @@ def delete(folder):
 
 
 def main():
+    # adjust program directory
+    global PROGRAMDIRECTORY
+    PROGRAMDIRECTORY = PROGRAMDIRECTORY + os.path.sep + "Elden Ring Backups"
+    # create backup folder if needed
+    pathlib.Path(PROGRAMDIRECTORY).mkdir(exist_ok=True)
     folder, choice = waitForBackupOrReplace()
     while True:
         if choice == 1:
