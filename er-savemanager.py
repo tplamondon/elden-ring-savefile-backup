@@ -105,31 +105,63 @@ def extractIdFromPath(folder):
     return splitString[-1]
 
 
-def backup(folder):
+def backup(folder, replaceBackup=False):
     now = datetime.now()
     strTime = "." + now.strftime("%Y%m%d%H%M%S")
-    saveFileBackup = (
-        PROGRAMDIRECTORY
-        + os.path.sep
-        + extractIdFromPath(folder)
-        + os.path.sep
-        + SAVEFILE
-        + strTime
-    )
-    saveFileBakBackup = (
-        PROGRAMDIRECTORY
-        + os.path.sep
-        + extractIdFromPath(folder)
-        + os.path.sep
-        + SAVEFILEBAK
-        + strTime
-    )
     # create backup folder if needed
     pathlib.Path(PROGRAMDIRECTORY + os.path.sep + extractIdFromPath(folder)).mkdir(
         exist_ok=True
     )
-    shutil.copyfile(folder + os.path.sep + SAVEFILE, saveFileBackup)
-    shutil.copyfile(folder + os.path.sep + SAVEFILEBAK, saveFileBakBackup)
+
+    if replaceBackup == True:
+        pathlib.Path(
+            PROGRAMDIRECTORY
+            + os.path.sep
+            + extractIdFromPath(folder)
+            + os.path.sep
+            + "Replaced Backup"
+        ).mkdir(exist_ok=True)
+        saveFileBackup = (
+            PROGRAMDIRECTORY
+            + os.path.sep
+            + extractIdFromPath(folder)
+            + os.path.sep
+            + "Replaced Backup"
+            + os.path.sep
+            + SAVEFILE
+            + ".0000.replacedbackup"
+        )
+        saveFileBakBackup = (
+            PROGRAMDIRECTORY
+            + os.path.sep
+            + extractIdFromPath(folder)
+            + os.path.sep
+            + "Replaced Backup"
+            + os.path.sep
+            + SAVEFILEBAK
+            + ".0000.replacedbackup"
+        )
+        shutil.copyfile(folder + os.path.sep + SAVEFILE, saveFileBackup)
+        shutil.copyfile(folder + os.path.sep + SAVEFILEBAK, saveFileBakBackup)
+    else:
+        saveFileBackup = (
+            PROGRAMDIRECTORY
+            + os.path.sep
+            + extractIdFromPath(folder)
+            + os.path.sep
+            + SAVEFILE
+            + strTime
+        )
+        saveFileBakBackup = (
+            PROGRAMDIRECTORY
+            + os.path.sep
+            + extractIdFromPath(folder)
+            + os.path.sep
+            + SAVEFILEBAK
+            + strTime
+        )
+        shutil.copyfile(folder + os.path.sep + SAVEFILE, saveFileBackup)
+        shutil.copyfile(folder + os.path.sep + SAVEFILEBAK, saveFileBakBackup)
     print("Succesfully backed up files")
     return 0
 
@@ -148,6 +180,11 @@ def replace(folder):
     backupSaveFileBak = (
         backupFolder + os.path.sep + backupFiles[choice + int(len(backupFiles) / 2)]
     )
+    print(
+        "Backing up existing save, can be found in ./Elden Ring Backups/Replaced Backup/STEAM ID"
+    )
+    backup(folder, replaceBackup=True)
+    print("Replacing existing save with chosen backup")
     shutil.copyfile(backupSaveFile, folder + os.path.sep + SAVEFILE)
     shutil.copyfile(backupSaveFileBak, folder + os.path.sep + SAVEFILEBAK)
     print("Succesfully replaced files")
