@@ -1,4 +1,4 @@
-import os
+import os, sys
 from os import listdir
 from os.path import isfile, join
 import argparse
@@ -8,7 +8,11 @@ import shutil
 from datetime import datetime
 
 #! CONSTANTS
-PROGRAMDIRECTORY = str(pathlib.Path(__file__).parent.resolve())
+# required for pyintaller --onefile to work
+if getattr(sys, "frozen", False):
+    PROGRAMDIRECTORY = os.path.dirname(sys.executable)
+elif __file__:
+    PROGRAMDIRECTORY = str(pathlib.Path(__file__).parent.resolve())
 PATH = os.getenv("APPDATA") + os.path.sep + "EldenRing"
 # this gives %appdata%/EldenRing
 SAVEFILE = "ER0000.sl2"
