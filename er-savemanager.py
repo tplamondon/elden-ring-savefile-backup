@@ -75,8 +75,8 @@ def choices():
     print("Please select one of the following: ")
     print("1. Backup save")
     print("2. Replace save with backup")
-    print("3. Rename sackup")
-    print("4. Delete sackup")
+    print("3. Rename backup")
+    print("4. Delete backup")
     print("5. Select a new steam id")
     print("6. Exit program")
     while True:
@@ -94,10 +94,7 @@ def choices():
 def waitForBackupOrReplace():
     folder = getIdFolder()
     choice = choices()
-    if choice == 3:
-        return waitForBackupOrReplace()
-    else:
-        return folder, choice
+    return folder, choice
 
 
 def extractIdFromPath(folder):
