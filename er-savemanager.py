@@ -54,12 +54,12 @@ def getFiles(folder):
     return backupFiles, backupFolder
 
 
-def getFileChoice(backupFiles):
+def getFileChoice(backupFiles, name):
     for i in range(int(len(backupFiles) / 2)):
         print(str(i) + ": " + backupFiles[i])
     print(str(int(len(backupFiles) / 2)) + ". Cancel")
     while True:
-        choice = input("Please select backup to rename: ")
+        choice = input("Please select backup to " + name + ": ")
         if not choice.isnumeric():
             continue
         choice = int(choice)
@@ -168,7 +168,7 @@ def replace(folder):
 
     backupFiles, backupFolder = getFiles(folder)
     # have list of backups available, SAVEFILE's come first, SAVEFILEBAK's come last
-    choice = getFileChoice(backupFiles)
+    choice = getFileChoice(backupFiles, "replace")
     if choice == -1:
         return
 
@@ -192,7 +192,7 @@ def rename(folder):
     print("===================================")
     backupFiles, backupFolder = getFiles(folder)
     # have list of backups available, SAVEFILE's come first, SAVEFILEBAK's come last
-    choice = getFileChoice(backupFiles)
+    choice = getFileChoice(backupFiles, "rename")
     if choice == -1:
         return
     # have choice now
@@ -232,7 +232,7 @@ def delete(folder):
     print("===================================")
     backupFiles, backupFolder = getFiles(folder)
     # have list of backups available, SAVEFILE's come first, SAVEFILEBAK's come last
-    choice = getFileChoice(backupFiles)
+    choice = getFileChoice(backupFiles, "delete")
     if choice == -1:
         return
     # have choice now
