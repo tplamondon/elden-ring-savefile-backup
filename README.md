@@ -5,7 +5,7 @@ To build the exe yourself
 - pip install pyinstaller
 - pyinstaller er-savemanager.py
 
-Otherwise, just run `pyinstaller --onefile er-savemanager.py`
+Otherwise, just run `pyinstaller --onefile "SCRIPT.py"` where script is the name of the script to create the executable
 Follow the onscreen instructions
 
 This assumes you're using a windows PC, where the Elden ring saves are stored in %appdata%
